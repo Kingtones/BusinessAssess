@@ -1,6 +1,6 @@
 
 public class Salesman {
-	public double income;
+	public double income=0.0;
 	public double reward=0.0001;//提前收账的奖励率
 	public double penalty=0.00008;//延期收账的惩罚利率
 	public double pushMoney=0.01;//提成率

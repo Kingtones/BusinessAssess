@@ -8,7 +8,7 @@ public class leaseContract {
 	public static int interval;//静态变量，数值表示还款时间间隔与标准收账时间间隔的差值
 	public double borrowedCredit;//借出的金额，即应收回的帐款
 	public double repayCredit;//已收回的帐款
-	
+	public static boolean isRepay=false;
 	public String borrowDate;//借款日期
 	public String repayDate;//还款日期
 		
@@ -75,7 +75,7 @@ public class leaseContract {
             e.printStackTrace();  
         }  
         interval=loanTime-(int)((from - to) / (1000 * 60 * 60 * 24));
-        
+        //System.out.println("shijiancha:"+interval);
         double reward=0.0;
 		if(interval>=0){
 			reward=0.0001*interval;

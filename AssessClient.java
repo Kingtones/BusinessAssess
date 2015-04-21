@@ -23,8 +23,8 @@ public class AssessClient {
 	public static Statement stmt=null;
 	public static ResultSet rs=null;
 	
-	leaseContract lc=new leaseContract();
-	static Salesman sm=new Salesman();
+	static leaseContract lc=new leaseContract();
+	
 	
 	
 	/**
@@ -44,20 +44,21 @@ public class AssessClient {
 	 */
 	public static void main(String[] args) throws SQLException {
 		AssessClient ac=new AssessClient();
+		
 		System.out.println("请输入业务员的员工号:");
 		Scanner in=new Scanner(System.in);
 		int employeeNo=in.nextInt();
-		
+		Salesman sm=new Salesman(employeeNo,lc,ac);
 		connect();
 		ac.getID(employeeNo);
 		for(int i=0;i<ac.ID.size();i++){
 			ac.getleaseContract(ac.ID.get(i));
 		}
+		
 		System.out.println("员工["+employeeNo+"] 本月的收入是： "+sm.income());
+	
+		
 	}
-
-	
-	
 	/**
 	 * 连接oracle数据库的静态方法
 	 * 返回类型void
@@ -85,7 +86,6 @@ public class AssessClient {
 	 * 将检索到的所有id写入到ArrayList ID中
 	 */
 	public void getID(int employeeNo){
-		int id=0;
 		try {
 			String sql="select * from Salesman where employeeNo="+employeeNo;
 			conn=DriverManager.getConnection(url, userName, passWord);
@@ -137,6 +137,7 @@ public class AssessClient {
 			while(rs.next()){
 				this.borrowDate.add(rs.getString("borrowDate").substring(0,10));
 				if(rs.getString("repayDate")!=null){
+					leaseContract.isRepay=true;
 					this.repayDate.add(rs.getString("repayDate").substring(0,10));
 				}else {
 					this.repayDate.add(df.format(new Date()));
