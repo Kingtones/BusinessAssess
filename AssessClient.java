@@ -1,7 +1,10 @@
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Date;
 
@@ -56,7 +59,7 @@ public class AssessClient {
 		}
 		
 		System.out.println("员工["+employeeNo+"] 本月的收入是： "+sm.income());
-	
+		
 		
 	}
 	/**
@@ -136,8 +139,8 @@ public class AssessClient {
 			rs=stmt.executeQuery(sql);
 			while(rs.next()){
 				this.borrowDate.add(rs.getString("borrowDate").substring(0,10));
-				if(rs.getString("repayDate")!=null){
-					leaseContract.isRepay=true;
+				if(rs.getString("repayDate")!=null&&isThisMonth(rs.getString("repayDate"))){
+					//leaseContract.isRepay=true;
 					this.repayDate.add(rs.getString("repayDate").substring(0,10));
 				}else {
 					this.repayDate.add(df.format(new Date()));
@@ -173,6 +176,36 @@ public class AssessClient {
 			
 		}
 	} 
+
+	
+	/**
+	 * 判断还款日期是否属于当前月份的方法，如果不属于当前月份则不计入奖励或惩罚
+	 * @param repayDate
+	 * @return
+	 */
+	
+	public boolean isThisMonth(String repayDate){
+		SimpleDateFormat date=new SimpleDateFormat("yyyy-mm-dd");
+		
+		Calendar aCalendar = Calendar.getInstance(Locale.CHINA);
+		int day=aCalendar.getActualMaximum(Calendar.DATE);
+
+		long today = 0;  
+        try {  
+            today = date.parse(df.format(new Date())).getTime();  
+        } catch (ParseException e) {  
+            e.printStackTrace();  
+        }  
+        long from = 0;  
+        try {  
+            from = date.parse(repayDate).getTime();  
+        } catch (ParseException e) {  
+            e.printStackTrace();  
+        }
+        if(((today-from)/1000*60*60*24)<day) return true;
+        else return false;
+	}
+	
 	
 	
 }
